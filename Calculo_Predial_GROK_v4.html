@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Impuesto Predial 2026</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e0f7fa 0%, #c8e6c9 100%);
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #1b5e20;
+            margin-bottom: 25px;
+        }
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+        }
+        form, #results {
+            background: rgba(255, 255, 255, 0.92);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin: 12px 0 6px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #81c784;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        input[readonly] {
+            background: #f1f8e9;
+            color: #33691e;
+        }
+        #results h2 {
+            color: #1b5e20;
+            margin-top: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #a5d6a7;
+            padding: 10px;
+        }
+        th {
+            background: #e8f5e9;
+            color: #1b5e20;
+        }
+        .number {
+            text-align: right;
+            font-family: Consolas, monospace;
+        }
+        .importante {
+            font-weight: bold;
+            color: #d32f2f;
+            font-size: 1.1rem;
+        }
+        .resumen {
+            font-size: 1.15rem;
+            margin: 18px 0 8px;
+            padding: 12px;
+            background: #e8f5e9;
+            border-left: 5px solid #43a047;
+            border-radius: 4px;
+        }
+		
+		
+		
+		@media print {
+    html, body {
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .container {
+        margin: 0 !important;
+        padding: 10mm 12mm !important;   /* ajusta márgenes de impresión */
+    }
+
+    /* Evita espacio extra al final */
+    #results {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    /* Opcional: fuerza que todo quepa en una hoja si es corto */
+    body {
+        min-height: unset !important;
+    }
+
+    /* Elimina cualquier elemento no deseado (botones, etc. si los agregas después) */
+    .no-print {
+        display: none !important;
+    }
+}
+		
+		
+		
+		
+		.btn-regresar {
+        display: inline-block;
+        margin: 0 0 20px 0;
+        padding: 10px 18px;
+        background-color: #2e7d32;
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        font-size: 1.1rem;
+    }
+
+    .btn-regresar:hover {
+        background-color: #1b5e20;
+        transform: translateX(-4px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+		
+		
+		@media print {
+            .btn-regresar {
+                display: none !important;
+            }
+        }
+		
+		
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- === BOTÓN REGRESAR AL MENÚ === -->
+    <!-- CAMBIA AQUÍ EL LINK DEL MENÚ PRINCIPAL -->
+    <a href="Calculos_principal.html" class="btn-regresar">
+        ← REGRESAR AL MENÚ
+    </a>
+
+
+    <h1>Cálculo del Impuesto Predial</h1>
+
+    <form id="calcForm">
+        <label for="year">Año:</label>
+        <select id="year">
+            <option value="2007">2007</option>
+            <option value="2008">2008</option>
+            <option value="2009">2009</option>
+            <option value="2010">2010</option>
+            <option value="2011">2011</option>
+            <option value="2012">2012</option>
+            <option value="2013">2013</option>
+            <option value="2014">2014</option>
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026" selected>2026</option>
+        </select>
+
+        <label for="uit">UIT (según año):</label>
+        <input type="text" id="uit" readonly>
+
+        <label for="autovaluo">Autovalúo (S/):</label>
+        <input type="number" id="autovaluo" step="0.01" placeholder="Ingrese el valor del Autovaluo">
+
+        <label for="pensionista">¿Es pensionista?</label>
+        <select id="pensionista">
+            <option value="si">Sí</option>
+            <option value="no" selected>No</option>
+        </select>
+
+        <label for="descuento">Descuento Ley Amazonía (tasa %):</label>
+        <input type="number" id="descuento" step="0.001" min="0" max="1" value="0.03">
+    </form>
+
+    <div id="results">
+        <h2>Resultados</h2>
+
+        <div class="resumen">
+            Base Imponible: <span id="baseImponible" class="number">—</span>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tramo</th>
+                    <th>Monto base</th>
+                    <th>Tasa</th>
+                    <th>Impuesto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tramo 1 (0 – 15 UIT)</td>
+                    <td id="tramo1Base" class="number">0.00</td>
+                    <td>0.200%</td>
+                    <td id="tramo1Impuesto" class="number">0.00</td>
+                </tr>
+                <tr>
+                    <td>Tramo 2 (15 – 60 UIT)</td>
+                    <td id="tramo2Base" class="number">0.00</td>
+                    <td>0.600%</td>
+                    <td id="tramo2Impuesto" class="number">0.00</td>
+                </tr>
+                <tr>
+                    <td>Tramo 3 (más de 60 UIT)</td>
+                    <td id="tramo3Base" class="number">0.00</td>
+                    <td>1.000%</td>
+                    <td id="tramo3Impuesto" class="number">0.00</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="resumen">
+            Impuesto Anual: <span id="anual" class="importante number">—</span><br>
+            <small>(mínimo anual = 0.006 × UIT)</small>
+        </div>
+
+        <div class="resumen" style="background:#e3f2fd; border-left-color:#1976d2;">
+            Impuesto Trimestral: <span id="trimestral" class="number">—</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const uitPorAnio = {
+        2007: 3450, 2008: 3500, 2009: 3550, 2010: 3600,
+        2011: 3600, 2012: 3650, 2013: 3700, 2014: 3800,
+        2015: 3850, 2016: 3950, 2017: 4050, 2018: 4150,
+        2019: 4200, 2020: 4300, 2021: 4400, 2022: 4600,
+        2023: 4950, 2024: 5150, 2025: 5350, 2026: 5500
+    };
+
+    document.querySelectorAll('#calcForm input, #calcForm select')
+        .forEach(el => el.addEventListener('input', calcular));
+
+    function formatearNumero(num) {
+        return num.toLocaleString('es-PE', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function calcular() {
+        const año = document.getElementById('year').value;
+        const uit = uitPorAnio[año] || 5500;
+        document.getElementById('uit').value = formatearNumero(uit);
+
+        const autovaluo = parseFloat(document.getElementById('autovaluo').value) || 0;
+        const esPensionista = document.getElementById('pensionista').value === 'si';
+        const tasaDescuento = parseFloat(document.getElementById('descuento').value) || 0;
+
+        // Deducción por pensionista (50 UIT según norma común)
+        const deduccionPension = esPensionista ? 50 * uit : 0;
+
+        let baseTemp = Math.max(0, autovaluo - deduccionPension);
+        let baseImponible = baseTemp * (1 - tasaDescuento);
+        baseImponible = Math.max(0, baseImponible);
+
+        document.getElementById('baseImponible').textContent = formatearNumero(baseImponible);
+
+        const lim1 = 15 * uit;
+        const lim2 = 60 * uit;
+
+        const t1 = Math.min(baseImponible, lim1);
+        const t2 = Math.min(Math.max(0, baseImponible - lim1), lim2 - lim1);
+        const t3 = Math.max(0, baseImponible - lim2);
+
+        const imp1 = t1 * 0.002;
+        const imp2 = t2 * 0.006;
+        const imp3 = t3 * 0.01;
+
+        document.getElementById('tramo1Base').textContent    = formatearNumero(t1);
+        document.getElementById('tramo1Impuesto').textContent = formatearNumero(imp1);
+        document.getElementById('tramo2Base').textContent    = formatearNumero(t2);
+        document.getElementById('tramo2Impuesto').textContent = formatearNumero(imp2);
+        document.getElementById('tramo3Base').textContent    = formatearNumero(t3);
+        document.getElementById('tramo3Impuesto').textContent = formatearNumero(imp3);
+
+        let impuestoAnual = imp1 + imp2 + imp3;
+
+        // Mínimo anual según solicitud: 0.006 × UIT
+        const minimoAnual = 0.006 * uit;
+        impuestoAnual = Math.max(impuestoAnual, minimoAnual);
+
+        const trimestral = impuestoAnual / 4;
+
+        document.getElementById('anual').textContent     = formatearNumero(impuestoAnual);
+        document.getElementById('trimestral').textContent = formatearNumero(trimestral);
+    }
+
+    // Cálculo inicial
+    calcular();
+</script>
+</body>
+</html>

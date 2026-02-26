@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Impuesto de Alcabala</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 40%, #e8f5e9 100%);
+            color: #1a237e;
+        }
+        h1 {
+            text-align: center;
+            color: #1565c0;
+            margin-bottom: 28px;
+        }
+        .container {
+            max-width: 840px;
+            margin: 0 auto;
+        }
+        form, #results {
+            background: rgba(255, 255, 255, 0.94);
+            padding: 26px;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(33, 150, 243, 0.14);
+            margin-bottom: 30px;
+            border: 1px solid #bbdefb;
+        }
+        label {
+            display: block;
+            margin: 14px 0 7px;
+            font-weight: bold;
+            color: #0d47a1;
+        }
+        input, select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #90caf9;
+            border-radius: 7px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus {
+            border-color: #42a5f5;
+            outline: none;
+        }
+        input[readonly] {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        #opcionales {
+            margin-top: 22px;
+            border-top: 1px solid #90caf9;
+            padding-top: 18px;
+        }
+        #opcionales.hidden {
+            display: none;
+        }
+        #results h2 {
+            color: #1565c0;
+            margin-top: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+        }
+        th, td {
+            border: 1px solid #bbdefb;
+            padding: 11px;
+        }
+        th {
+            background: #e3f2fd;
+            color: #0d47a1;
+        }
+        .number {
+            text-align: right;
+            font-family: Consolas, monospace;
+        }
+        .importante {
+            font-weight: bold;
+            color: #c62828;
+            font-size: 1.15rem;
+        }
+        .resumen {
+            font-size: 1.16rem;
+            margin: 20px 0 10px;
+            padding: 14px;
+            background: #e8f5e9;
+            border-left: 6px solid #43a047;
+            border-radius: 6px;
+            color: #1b5e20;
+        }
+        .resumen-azul {
+            background: #e3f2fd;
+            border-left: 6px solid #1976d2;
+            color: #0d47a1;
+        }
+        input[type="checkbox"] + label {
+            font-weight: normal;
+            color: #424242;
+            margin-top: 18px;
+        }
+		
+		@media print {
+      body {
+        margin: 0;
+        padding: 0;
+        /*background: white !important;*/
+      }
+
+      .pagina {
+        margin: 0;
+        padding: 15mm 20mm;
+        border: none;
+        /*background: white !important;*/
+        break-inside: avoid;          /* evita que se parta una página */
+        break-after: page;            /* fuerza salto después de este bloque */
+      }
+		}
+		
+		.btn-regresar {
+        display: inline-block;
+        margin: 0 0 20px 0;
+        padding: 10px 18px;
+        background-color: #2e7d32;
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        font-size: 1.1rem;
+    }
+
+    .btn-regresar:hover {
+        background-color: #1b5e20;
+        transform: translateX(-4px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+	
+		
+		@media print {
+            .btn-regresar {
+                display: none !important;
+            }
+        }
+		
+		
+    </style>
+</head>
+<body>
+
+<div class="container">
+  
+<!-- === BOTÓN REGRESAR AL MENÚ === -->
+    <!-- CAMBIA AQUÍ EL LINK DEL MENÚ PRINCIPAL -->
+    <a href="Calculos_principal.html" class="btn-regresar">
+        ← REGRESAR AL MENÚ
+    </a>
+	
+	
+	
+	<h1>Cálculo del Impuesto de Alcabala</h1>
+
+
+
+    <form id="calcForm">
+        <label for="year">Año:</label>
+        <select id="year">
+            <option value="2007">2007</option>
+            <option value="2008">2008</option>
+            <option value="2009">2009</option>
+            <option value="2010">2010</option>
+            <option value="2011">2011</option>
+            <option value="2012">2012</option>
+            <option value="2013">2013</option>
+            <option value="2014">2014</option>
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026" selected>2026</option>
+        </select>
+
+        <label for="uit">UIT (según año):</label>
+        <input type="text" id="uit" readonly>
+
+        <label for="precioDolares">Precio en Dólares (US$):</label>
+        <input type="number" id="precioDolares" step="0.01" placeholder="Ingrese el Precio">
+
+        <label for="tipoCambio">Tipo de Cambio (S/ por US$):</label>
+        <input type="number" id="tipoCambio" step="0.01" placeholder="Ingrese el Tipo de Cambio Vigente">
+
+        <label for="autovaluo">Valor de Autovalúo (S/):</label>
+        <input type="number" id="autovaluo" step="0.01" placeholder="Ingrese el Valor del Autovaluo">
+
+        <label for="factorOficializacion">Factor de Oficialización:</label>
+        <input type="number" id="factorOficializacion" step="0.0001" value="1.0000">
+
+        <label for="leyAmazonia">Ley de la Amazonía (tasa exoneración):</label>
+        <input type="number" id="leyAmazonia" step="0.001" min="0" max="1" value="0.03">
+
+        <label for="porcTransferencia">Porcentaje de Transferencia (%):</label>
+        <input type="number" id="porcTransferencia" step="0.01" min="0" max="100" value="100">
+
+        <label>
+            <input type="checkbox" id="incluirOpcionales"> Incluir datos de la transferencia (opcional)
+        </label>
+
+        <div id="opcionales" class="hidden">
+            <label for="contribuyente" >Nombre del Contribuyente:</label>
+            <input type="text" id="contribuyente" placeholder="Ingrese el Nombre del Contribuyente">
+
+            <label for="predio" >Predio de la Transferencia:</label>
+            <input type="text" id="predio" placeholder="Ingrese la direccion del predio de la transferencia">
+
+            <label for="fechaTransferencia">Fecha de Transferencia:</label>
+            <input type="date" id="fechaTransferencia">
+        </div>
+    </form>
+
+    <div id="results" class="pagina">
+        <h2>Resultados</h2>
+
+        <div class="resumen">
+            Precio en Soles: <span id="precioSoles" class="number">—</span>
+        </div>
+
+        <div class="resumen">
+            Autovalúo Oficializado: <span id="autovaluoOficializado" class="number">—</span>
+        </div>
+
+        <div class="resumen">
+            Valor Afecto (Mayor entre Precio Soles y Autovalúo Oficializado): <span id="valorAfecto" class="number">—</span>
+        </div>
+
+        <div class="resumen">
+            Deducción (10 UIT): <span id="deduccion" class="number">—</span>
+        </div>
+
+        <div class="resumen">
+            Base Imponible Inicial: <span id="baseImponibleInicial" class="number">—</span>
+        </div>
+
+        <div class="resumen">
+            Base Exonerada (Ley Amazonía): <span id="baseExonerada" class="number">—</span>
+        </div>
+
+        <div class="resumen">
+            Base Imponible Afecta: <span id="baseImponibleAfecta" class="number">—</span>
+        </div>
+
+        <div class="resumen">
+            BASE IMPONIBLE (ajustada por % Transferencia): <span id="baseImponible" class="number">—</span>
+        </div>
+
+        <div class="resumen resumen-azul">
+            Impuesto de Alcabala Insoluto (tasa 3%): <span id="impuestoAlcabala" class="importante number">—</span>
+        </div>
+
+        <div id="datosOpcionales" class="hidden">
+            <h3>Datos de la Transferencia</h3>
+            <p>Contribuyente: <span id="resContribuyente"></span></p>
+            <p>Predio: <span id="resPredio"></span></p>
+            <p>Fecha de Transferencia: <span id="resFechaTransferencia"></span></p>
+            <p>Fecha de Registro: <span id="resFechaRegistro"></span></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const uitPorAnio = {
+        2007: 3450, 2008: 3500, 2009: 3550, 2010: 3600,
+        2011: 3600, 2012: 3650, 2013: 3700, 2014: 3800,
+        2015: 3850, 2016: 3950, 2017: 4050, 2018: 4150,
+        2019: 4200, 2020: 4300, 2021: 4400, 2022: 4600,
+        2023: 4950, 2024: 5150, 2025: 5350, 2026: 5500
+    };
+
+    document.querySelectorAll('#calcForm input, #calcForm select')
+        .forEach(el => el.addEventListener('input', calcular));
+
+    const checkboxOpc = document.getElementById('incluirOpcionales');
+    checkboxOpc.addEventListener('change', () => {
+        document.getElementById('opcionales').classList.toggle('hidden', !checkboxOpc.checked);
+        document.getElementById('datosOpcionales').classList.toggle('hidden', !checkboxOpc.checked);
+        calcular();
+    });
+
+    function formatearNumero(num) {
+        return num.toLocaleString('es-PE', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function formatearFecha(fecha) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return fecha.toLocaleDateString('es-PE', options);
+    }
+
+    function calcular() {
+        const año = document.getElementById('year').value;
+        const uit = uitPorAnio[año] || 5500;
+        document.getElementById('uit').value = formatearNumero(uit);
+
+        const precioDolares = parseFloat(document.getElementById('precioDolares').value) || 0;
+        const tipoCambio = parseFloat(document.getElementById('tipoCambio').value) || 0;
+        const autovaluo = parseFloat(document.getElementById('autovaluo').value) || 0;
+        const factorOficializacion = parseFloat(document.getElementById('factorOficializacion').value) || 1;
+        const leyAmazonia = parseFloat(document.getElementById('leyAmazonia').value) || 0;
+        const porcTransferencia = parseFloat(document.getElementById('porcTransferencia').value) / 100 || 1;
+
+        const precioSoles = precioDolares * tipoCambio;
+        document.getElementById('precioSoles').textContent = formatearNumero(precioSoles);
+
+        const autovaluoOficializado = autovaluo * factorOficializacion;
+        document.getElementById('autovaluoOficializado').textContent = formatearNumero(autovaluoOficializado);
+
+        const valorAfecto = Math.max(precioSoles, autovaluoOficializado);
+        document.getElementById('valorAfecto').textContent = formatearNumero(valorAfecto);
+
+        const deduccion = 10 * uit;
+        document.getElementById('deduccion').textContent = formatearNumero(deduccion);
+
+        let baseImponibleInicial = Math.max(0, valorAfecto - deduccion);
+        document.getElementById('baseImponibleInicial').textContent = formatearNumero(baseImponibleInicial);
+
+        const baseExonerada = baseImponibleInicial * leyAmazonia;
+        document.getElementById('baseExonerada').textContent = formatearNumero(baseExonerada);
+
+        const baseImponibleAfecta = Math.max(0, baseImponibleInicial - baseExonerada);
+        document.getElementById('baseImponibleAfecta').textContent = formatearNumero(baseImponibleAfecta);
+
+        const baseImponible = baseImponibleAfecta * porcTransferencia;
+        document.getElementById('baseImponible').textContent = formatearNumero(baseImponible);
+
+        const tasaImpuesto = 0.03;
+        const impuestoAlcabala = baseImponible * tasaImpuesto;
+        document.getElementById('impuestoAlcabala').textContent = formatearNumero(impuestoAlcabala);
+
+        // Datos opcionales
+        if (checkboxOpc.checked) {
+            const contribuyente = document.getElementById('contribuyente').value || 'No especificado';
+            const predio = document.getElementById('predio').value || 'No especificado';
+            const fechaTransferenciaInput = document.getElementById('fechaTransferencia').value;
+            const fechaTransferencia = fechaTransferenciaInput ? formatearFecha(new Date(fechaTransferenciaInput)) : 'No especificada';
+            const fechaRegistro = formatearFecha(new Date());
+
+            document.getElementById('resContribuyente').textContent = contribuyente;
+            document.getElementById('resPredio').textContent = predio;
+            document.getElementById('resFechaTransferencia').textContent = fechaTransferencia;
+            document.getElementById('resFechaRegistro').textContent = fechaRegistro;
+        }
+    }
+
+    // Cálculo inicial
+    calcular();
+</script>
+</body>
+</html>
